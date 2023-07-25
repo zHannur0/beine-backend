@@ -3,7 +3,7 @@ services:
     name: fastapi
     runtime: docker
     plan: free
-    repo: https://github.com/zHannur0/beine-nF
+    repo: https://github.com/zHannur0/beine-backend
     region: frankfurt
     branch: main
     envVars:
