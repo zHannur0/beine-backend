@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 
 class Config(BaseSettings):
-    CORS_ORIGINS: list[str] = ["*"]
+    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
     CORS_HEADERS: list[str] = ["*"]
     CORS_METHODS: list[str] = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 

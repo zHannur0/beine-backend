@@ -37,14 +37,20 @@ class TextService:
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=f"""{prompt_text} ->
-            for each text in this query, write text for the query to create a picture that fits the context. Your response should look like JSON:
-	            {{
-                "prompt1": "Prompt for 1 image",
-                "prompt2": "Prompt for 2 image."
-                "prompt3": "Prompt for 3 image",
-                "prompt4": "Prompt for 4 image",
-                "prompt5": "Prompt for 5 image."
-                }}""",
+            For the queries at the top, write good prompts for each text to generate pictures on DALL-E AI.
+
+            Example of other query:
+            - Generate a high-quality photo of a model with a futuristic hairstyle, neon makeup, and geometric nail art, inspired by Cyberpunk aesthetics.
+
+            Please add a corresponding negative clue to each prompt to ensure the pictures are visually pleasing and free from errors. Your response should look like JSON:
+
+            {{
+             "prompt1": "Prompt for the image of text1 ",
+             "prompt2": "Prompt for the second image text2 ",
+             "prompt3": "Prompt for the third image text3",
+             "prompt4": "Prompt for the fourth image text4",
+             "prompt5": "Prompt for the fifth image text5"
+            }}""",
             temperature=0.5,
             max_tokens=1000,
             top_p=1.0,

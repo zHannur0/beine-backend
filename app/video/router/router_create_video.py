@@ -39,7 +39,7 @@ def upload_video(
                                          jwt_data.user_id,
                                          temp_file.name)
 
-    svc.repository.add_video(jwt_data.user_id, url)
+    svc.repository.add_video(jwt_data.user_id, request.prompt, url)
 
     # return Response(status_code=200) 
     return {"link": url}

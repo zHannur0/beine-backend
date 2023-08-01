@@ -21,7 +21,7 @@ class Service:
         self.s3_service = S3Service()
         self.audio_service = AudioService(os.getenv('SOUND_TOKEN'), 
                                           os.getenv('SOUND_USERID'))
-        self.image_service = ImageService(os.getenv('TEXT_TO_IMAGE_TOKEN'))
+        self.image_service = ImageService(os.getenv('OPENAI_API_KEY'))
         self.text_service = TextService(os.getenv('OPENAI_API_KEY'))
         self.video_service = VideoService()
 

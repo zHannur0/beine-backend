@@ -1,13 +1,7 @@
-import base64
 import tempfile
 import urllib
 from urllib import request
-
 from moviepy.editor import *
-
-import io
-from PIL import Image
-import numpy as np
 
 
 class VideoService:
@@ -29,15 +23,7 @@ class VideoService:
             durations.append(audio_clip.duration)
 
         for image in images_data:
-            image = base64.b64decode(image)
-            i = io.BytesIO(image)
-
-            pil_image = Image.open(i)
-
-            # Convert the PIL image to a numpy array
-            image_array = np.array(pil_image)
-
-            images.append(ImageClip(image_array))
+            images.append(ImageClip(image))
 
         for i in range(5):
             images[i] = images[i].set_duration(durations[i])

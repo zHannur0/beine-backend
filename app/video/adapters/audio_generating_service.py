@@ -34,6 +34,7 @@ class AudioService:
             }
 
             response = requests.post(audio_url, json=payload, headers=headers)
+            print(response.text)
 
             match = re.search(r'"url":"(.*?)"', response.text)
             url_aud = match.group(1)
