@@ -9,6 +9,7 @@ from app.utils import AppModel
 
 from app.auth.adapters.jwt_service import JWTData
 from app.auth.router.dependencies import parse_jwt_user_data
+import json
 
 
 class GenerateVideoRequest(AppModel):
@@ -27,11 +28,26 @@ def upload_video(
     #     return Response(status_code=404)
 
     text = svc.text_service.generate_text(request.prompt)
+
+    try:
+        json.loads(text)
+    except:
+        return Response(status_code=404)
+
     image_text = svc.text_service.generate_image_text(text)
+
+    try:
+        json.loads(image_text)
+    except:
+        return Response(status_code=404)
+    
     audios = svc.audio_service.text_to_speach(text)
     images = svc.image_service.text_to_image(image_text)
     video = svc.video_service.generate_video(audios, images)
     url = ""
+
+    print(text)
+    print(image_text)
     
     with tempfile.NamedTemporaryFile(suffix='.mp4', delete=True) as temp_file:
         video.write_videofile(temp_file.name, fps=10)
