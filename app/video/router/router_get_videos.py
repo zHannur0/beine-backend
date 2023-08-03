@@ -15,11 +15,12 @@ from . import router
 class Video(AppModel):
     title: str
     video_url: str
+    image: str
 
 
 class GetAllVideosResponse(AppModel):
     videos: List[Video]
-    
+
 
 @router.get("/allvideos", response_model=GetAllVideosResponse)
 def get_videos(
