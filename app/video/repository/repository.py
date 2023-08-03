@@ -10,8 +10,9 @@ class VideoRepository:
     def __init__(self, database: Database):
         self.database = database
 
-    def add_video(self, user_id: str, title: str, url: str):
-        payload = {"user_id": user_id, "title": title, "video_url": url}
+    def add_video(self, user_id: str, title: str, url: str, image_url: str):
+        payload = {"user_id": user_id, "title": title, "video_url": url,
+                   "image": image_url}
 
         self.database["beine"].insert_one(payload)
 

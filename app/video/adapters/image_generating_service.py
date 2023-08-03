@@ -1,5 +1,8 @@
 import json
 import openai
+import requests
+from PIL import Image
+from io import BytesIO
 
 
 class ImageService:
@@ -20,3 +23,13 @@ class ImageService:
             images.append(response['data'][0]['url'])
 
         return images
+    
+    def convert_url_to_image(self, image_url):
+        try:
+            response = requests.get(image_url)
+            image = Image.open(BytesIO(response.content))
+
+            return image
+        except Exception as e:
+            print(f"Error converting URL to image: {e}")
+            return None

@@ -45,6 +45,8 @@ def upload_video(
     images = svc.image_service.text_to_image(image_text)
     video = svc.video_service.generate_video(audios, images)
     url = ""
+    image_url = ""
+    image = svc.image_service.convert_url_to_image(images[0])
 
     print(text)
     print(image_text)
@@ -54,8 +56,14 @@ def upload_video(
         url = svc.s3_service.upload_file(temp_file,
                                          jwt_data.user_id,
                                          temp_file.name)
+        
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=True) as tmp_file:
+            image.save(tmp_file.name)
+            image_url = svc.s3_service.upload_file(tmp_file, 
+                                                   jwt_data.user_id,
+                                                   tmp_file.name)
 
-    svc.repository.add_video(jwt_data.user_id, request.prompt, url)
+    svc.repository.add_video(jwt_data.user_id, request.prompt.capitalize(), url, image_url)
 
     # return Response(status_code=200) 
     return {"link": url}
