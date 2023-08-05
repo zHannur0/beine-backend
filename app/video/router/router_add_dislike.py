@@ -12,15 +12,21 @@ from ..service import Service, get_service
 from . import router
 
 
-@router.post("/{video_id: str}/dislike")
+class dislikeId(AppModel):
+    video_id: str
+
+
+@router.post("/dislike")
 def add_like(
-    video_id: str,
+    video_id: dislikeId,
     jwt_data: JWTData = Depends(parse_jwt_user_data),
     svc: Service = Depends(get_service)
 ):
     username = svc.repository.get_user_by_id(jwt_data.user_id)["username"]
 
-    res = svc.repository.add_dislike(username, video_id)
+    print(video_id)
+
+    res = svc.repository.add_dislike(username, video_id.video_id)
 
     if res == "No":
         return Response(status_code=404)
