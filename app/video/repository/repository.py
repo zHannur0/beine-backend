@@ -43,7 +43,6 @@ class VideoRepository:
         likes = self.database["beine"].find_one({'_id': ObjectId(video_id)}).get('like', [])
         if username in likes:
             return "No"
-        
         result = self.database["beine"].update_one(
             filter={"_id": ObjectId(video_id)},
             update={
