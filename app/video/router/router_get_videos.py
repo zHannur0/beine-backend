@@ -13,9 +13,13 @@ from . import router
 
 
 class Video(AppModel):
+    id: Any = Field(alias="_id")
+    username: str
     title: str
     video_url: str
     image: str
+    like: List
+    dislike: List 
 
 
 class GetAllVideosResponse(AppModel):
@@ -30,5 +34,10 @@ def get_videos(
     res = []
     videos = svc.repository.all_videos()
     for video in videos:
-        res.append(Video(**video))
+        username = svc.repository.get_user_by_id(video["user_id"])["username"]
+        res.append(Video(id=video["_id"], username=username, title=video["title"],
+                         video_url=video["video_url"],
+                         image=video["image"],
+                         like=video["like"],
+                         dislike=video["dislike"]))
     return GetAllVideosResponse(videos=res)
