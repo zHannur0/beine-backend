@@ -1,4 +1,6 @@
 import openai
+import requests
+import json
 
 
 class TextService:
@@ -60,3 +62,55 @@ class TextService:
 
         text = response["choices"][0]["text"]
         return text
+    
+    def translate(self, text):
+        text_arr = {}
+        json_d = json.loads(text)
+
+        for i in range(5):
+            url = "https://backend-project-5m5f.onrender.com/api/translater"
+            data = {
+                "query": json_d[f'title{i + 1}'],
+                "fr": "en",
+                "to": "kk",
+            }
+
+            response = requests.post(url, json=data)
+
+            if response.status_code == 200:
+                result = response.json()
+                text_arr[f"title{i+1}"] = result["msg"]
+            else:
+                return "NO"
+            
+        for i in range(5):
+            url = "https://backend-project-5m5f.onrender.com/api/translater"
+            data = {
+                "query": json_d[f'text{i + 1}'],
+                "fr": "en",
+                "to": "kk",
+            }
+
+            response = requests.post(url, json=data)
+
+            if response.status_code == 200:
+                result = response.json()
+                text_arr[f"text{i+1}"] = result["msg"]
+            else:
+                return "NO"
+            
+        return text_arr
+
+    def translate_prompt(self, text):
+        url = "https://backend-project-5m5f.onrender.com/api/translater"
+        data = {
+            "query": text,
+            "fr": "kk",
+            "to": "en",
+        }
+        response = requests.post(url, json=data)
+        if response.status_code == 200:
+            result = response.json()
+            return result["msg"]
+        else:
+            return "NO"

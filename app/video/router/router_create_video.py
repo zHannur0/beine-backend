@@ -14,7 +14,7 @@ import json
 
 class GenerateVideoRequest(AppModel):
     prompt: str
-
+    lang: str
 
 @router.post("/newvideo")
 def upload_video(
@@ -26,13 +26,30 @@ def upload_video(
 
     # if user is None:
     #     return Response(status_code=404)
+    pr = request.prompt
+    if request.lang == 'Қазақ':
+        pr = svc.text_service.translate_prompt(request.prompt)
 
-    text = svc.text_service.generate_text(request.prompt)
+    if pr == "NO":
+         return Response(status_code=404)
+
+    text = svc.text_service.generate_text(pr)
+    lang = ""
 
     try:
         json.loads(text)
     except:
         return Response(status_code=404)
+
+    if request.lang == 'Қазақ':
+         text_json = svc.text_service.translate(text)
+         lang = "kk-KZ"
+         if text_json == "NO":
+              return Response(status_code=404) 
+    else:
+         text_json = json.loads(text)
+         lang = "en-US"
+   
 
     image_text = svc.text_service.generate_image_text(text)
 
@@ -41,12 +58,14 @@ def upload_video(
     except:
         return Response(status_code=404)
     
-    audios = svc.audio_service.text_to_speach(text)
+    
+    audios = svc.audio_service.text_to_speach(text_json,lang)
     images = svc.image_service.text_to_image(image_text)
     video = svc.video_service.generate_video(audios, images)
     url = ""
     image_url = ""
     image = svc.image_service.convert_url_to_image(images[0])
+
 
     print(text)
     print(image_text)

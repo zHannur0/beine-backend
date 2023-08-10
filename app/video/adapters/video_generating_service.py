@@ -15,9 +15,9 @@ class VideoService:
         images = []
         durations = []
         for audio in audio_urls:
-            with tempfile.NamedTemporaryFile(suffix='.mp3', delete=True) as temp_file:
-                urllib.request.urlretrieve(audio, temp_file.name)
-                audio_clip = AudioFileClip(temp_file.name)
+            with tempfile.NamedTemporaryFile(delete=True, suffix=".wav") as temp_audio_file:
+                temp_audio_file.write(audio)
+                audio_clip = AudioFileClip(temp_audio_file.name)
 
             audios.append(audio_clip)
             durations.append(audio_clip.duration)

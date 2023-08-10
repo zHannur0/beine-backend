@@ -5,39 +5,29 @@ import re
 
 
 class AudioService:
-    def __init__(self, api_key, api_userid):
+    def __init__(self, api_key):
         self.api_key = api_key
-        self.api_userid = api_userid
 
-    def text_to_speach(self, text):
-        audio_url = "https://play.ht/api/v2/tts"
+    def text_to_speach(self, text, lang):
         audio_urls = []
-        json_d = json.loads(text)
+        url = "https://westeurope.tts.speech.microsoft.com/cognitiveservices/v1"
+        headers = {
+            "Ocp-Apim-Subscription-Key": f"{self.api_key}",
+            "Content-Type": "application/ssml+xml",
+            "X-Microsoft-OutputFormat": "audio-16khz-128kbitrate-mono-mp3"
+        }
+
+        if lang == "kk-KZ":
+            voice = "kk-KZ-DauletNeural"
+        else:
+            voice = "en-US-ChristopherNeural"
 
         for i in range(5):
-            payload = {
-                "text": json_d[f'title{i + 1}'] + ",... " + json_d[f'text{i + 1}'],
-                "voice": "larry",
-                "quality": "medium",
-                "output_format": "mp3",
-                "speed": 1,
-                "sample_rate": 24000,
-                "seed": None,
-                "temperature": None
-            }
+            data = f'''<speak version='1.0' xml:lang='{lang}'><voice xml:lang='{lang}' xml:gender='Male' name='{voice}'>{text[f"title{i+1}"] + ",..." + text[f"text{i+1}"] }</voice></speak>'''
+            
+            data_utf8 = data.encode('utf-8')
+            response = requests.post(url, headers=headers, data=data_utf8)
 
-            headers = {
-                "accept": "text/event-stream",
-                "content-type": "application/json",
-                "AUTHORIZATION": f"Bearer {self.api_key}",
-                "X-USER-ID": f"{self.api_userid}"
-            }
-
-            response = requests.post(audio_url, json=payload, headers=headers)
-
-            match = re.search(r'"url":"(.*?)"', response.text)
-            url_aud = match.group(1)
-
-            audio_urls.append(url_aud)
+            audio_urls.append(response.content)
 
         return audio_urls
